@@ -1,4 +1,5 @@
 # GIT 笔记
+
 #### 设置用户名和邮箱
 GIT是分布式的，每个节点(机器)都要自报家门：用户名+邮箱。  
 设置全局用户名、邮箱（USERHOME/.gitconfig）  
@@ -12,6 +13,7 @@ GIT是分布式的，每个节点(机器)都要自报家门：用户名+邮箱�
 `git config user.email "email"`  
 `git config user.name`  
 `git config user.email `  
+
 #### 简单操作  
 在一个目录下执行命令，则这个目录就变为git的仓库了，会生成.git  
 `git init`  
@@ -46,41 +48,25 @@ GIT是分布式存储，在你没有推送到远端之前，在本地的版本�
 删除文件  
 `git rm filename`  
 `git commit filename -m "desc"`  
+GIT显示颜色  
+`git config --global color.ui true`  
+忽略不想提交的文件：.gitignore，需要提交这个文件  
+A collection of useful .gitignore templates：https://github.com/github/gitignore  
+如果文件提交不了，查看哪条规则限制了  
+`git check-ignore -v App.class`  
+强制提交  
+`git add -f App.class`
+配置别名  
+`git config [--global] alias.st status`  
+比如  
+`git config [--global] alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"`  
+全局别名在用户主目录.gitconfig，每个仓库别名在.git/config  
 
 #### 一些概念  
 工作区（Working Directory）：当初执行git init的那个目录，除了.git的所有内容。  
 版本库（Repository）：.git里面的内容。  
 git add 命令，将文件提交暂存区（stage or index）。  
 git commit 命令，将暂存区内文件提交到分支（branch）。  
-#### GITHUB
-GITHUB远程GIT仓库，https://github.com/  
-本地git和github是ssh传输，先设置ssh。  
-1、用户主目录/.ssh/id_rsa、id_rsa.pub，如果没有则生成  
-`ssh-keygen -t rsa -C "youremail@example.com"`  
-可以不用设置密码  
-2、在GITHUB后台设置公钥(id_rsa.pub)。这样就能确认是你提交的了。
-关于同步  
-1、在github上创建一个仓库（New Repository），然后 Clone or download会显示：  
-  git@github.com:Too8G/Git.git  
-2、关联远程版本库（origin是远程版本库的名字，可以改。只针对本地当前版本库有效）  
-`git remote add origin git@github.com:Too8G/Git.git`  
-3、将本地版本库推送到远程版本库指定分支（如果没有关联，会提示无法识别 origin）
-`git push -u origin master`  
-推送到远程版本库origin的master分支。第一次用-u是把本地master分支和远程master分支关联起来。以后就不用了。  
-我本地报错了，因为我要推送README.md，新建的版本库上有相同的文件，需要先pull，再push。  
-4、从远程版本库拉下来  
-`git pull origin master`  
-有冲突，先从远程把最新的pull下来，修改后，在push上去。  
-5、推到远程版本库  
-`git push origin master`  
-刚才pull的时候，已经关联master分支了，所以这里不用 -u了。  
-6、从远程版本库clone  
-`git clone git@github.com:Too8G/Git.git`  
-直接从远程版本库clone到本地，只要找个目录就行，不用执行git init之类的，clone下一个完整的仓库（带.git）。  
-可以git协议，也可以用https协议，github都有给出。  
-
-查看远程仓库信息  
-`git remote -v`  
 
 #### 关于分支
 创建分支（分支名 dev）  
@@ -154,3 +140,39 @@ push之前可以rebase一下，将“分叉”整理成一条“直线”。
 如果已经推送了，再想删除，要先删本地标签，再删远程标签。  
 删除远程标签  
 `git push origin :refs/tags/v0.9`  
+回退版本，以前是用commit id，现在可以用tag  
+`git reset --hard tag名字`  
+
+#### GITHUB
+GITHUB远程GIT仓库，https://github.com/  
+可以Fork别人GITHUB的代码，到自己的GITHUB仓库，然后clone到本地，随便改。
+还可以提交问题并留言（Issue）。
+可以共享代码、修改Bug，提交一个Pull request，是否接受看对方了。
+
+本地git和github是ssh传输，先设置ssh。  
+1、用户主目录/.ssh/id_rsa、id_rsa.pub，如果没有则生成  
+`ssh-keygen -t rsa -C "youremail@example.com"`  
+可以不用设置密码  
+2、在GITHUB后台设置公钥(id_rsa.pub)。这样就能确认是你提交的了。
+关于同步  
+1、在github上创建一个仓库（New Repository），然后 Clone or download会显示：  
+  git@github.com:Too8G/Git.git  
+2、关联远程版本库（origin是远程版本库的名字，可以改。只针对本地当前版本库有效）  
+`git remote add origin git@github.com:Too8G/Git.git`  
+3、将本地版本库推送到远程版本库指定分支（如果没有关联，会提示无法识别 origin）
+`git push -u origin master`  
+推送到远程版本库origin的master分支。第一次用-u是把本地master分支和远程master分支关联起来。以后就不用了。  
+我本地报错了，因为我要推送README.md，新建的版本库上有相同的文件，需要先pull，再push。  
+4、从远程版本库拉下来  
+`git pull origin master`  
+有冲突，先从远程把最新的pull下来，修改后，在push上去。  
+5、推到远程版本库  
+`git push origin master`  
+刚才pull的时候，已经关联master分支了，所以这里不用 -u了。  
+6、从远程版本库clone  
+`git clone git@github.com:Too8G/Git.git`  
+直接从远程版本库clone到本地，只要找个目录就行，不用执行git init之类的，clone下一个完整的仓库（带.git）。  
+可以git协议，也可以用https协议，github都有给出。  
+
+查看远程仓库信息  
+`git remote -v`  
