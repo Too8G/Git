@@ -79,6 +79,9 @@ GITHUB远程GIT仓库，https://github.com/
 直接从远程版本库clone到本地，只要找个目录就行，不用执行git init之类的，clone下一个完整的仓库（带.git）。  
 可以git协议，也可以用https协议，github都有给出。  
 
+查看远程仓库信息  
+`git remote -v`  
+
 #### 关于分支
 创建分支（分支名 dev）  
 `git branch dev`  
@@ -90,9 +93,8 @@ GITHUB远程GIT仓库，https://github.com/
 `git branch`  
 合并分支  
 `git merge dev`  
-有历史记录的合并  
+合并分支，有开发分支的历史记录(这种方式好一些)  
 `git merge --no-ff -m "merge with no-ff" dev`  
-这个实验后好像没什么效果
 删除分支  
 `git branch -d dev`  
 强制删除分支  
@@ -101,6 +103,54 @@ GITHUB远程GIT仓库，https://github.com/
 `git log --graph --pretty=oneline --abbrev-commit`  
 分支合并图  
 `git log --graph`  
+临时保存当前工作区（不提交，临时保存）  
+`git stash`  
+`git stash list`  
+恢复临时内容  
+`git stash apply`  
+删除临时内容  
+`git stash drop`  
+恢复并删除临时内容  
+`git stash pop`  
 
+#### 多人协作
+1、拉远程分支，进行开发
+`git checkout -b branch-name origin/branch-name`  
+这是多人用同一个分支开发的模式。  
+也可以自己用自己的分支，如果只在本地建分支，没有push，在远程是看不到的。  
+你可以push你的分支到远程，但是是否合并到master，由项目管理者说了算。  
+2、先尝试推送自己的修改  
+`git push origin <branch-name>`  
+3、如果推送失败，说明远程分支版本比本地的新，更新分支（从远程拉下分支，合并到本地）  
+`git pull`  
+4、如果pull失败，报错no tracking information，说明没有创建分支链接  
+`git branch --set-upstream-to=origin/dev dev`  
+`git pull`  
+5、此时分支版本是最新的了，手动解决冲突，然后本地提交（add --> commmit）
+6、最后推送  
+`git push origin <branch-name>`  
+push之前可以rebase一下，将“分叉”整理成一条“直线”。  
 
-
+#### 标签管理
+用commit id（版本号）不好管理？可以打标签（快照）。  
+当前分支版本打标签  
+`git tag 标签名`  
+（什么版本？ 工作区的、add但是没commit的都不是版本，只有 commit之后的是！）  
+指定commit id（版本号）打标签  
+`git tag v1.0 f52c633`  
+带说明的标签  
+`git tag -a v0.1 -m "version 0.1 released" 1094adb`  
+查看分支tag  
+`git tag`  
+查看指定tag详细内容  
+`git show v0.9`  
+推送指定标签  
+`git push origin v1.0`  
+推送全部标签  
+`git push origin --tags`  
+删除本地标签  
+`git tag -d v0.1`  
+本地标签，没有推送，远程是看不到的。  
+如果已经推送了，再想删除，要先删本地标签，再删远程标签。  
+删除远程标签  
+`git push origin :refs/tags/v0.9`  
